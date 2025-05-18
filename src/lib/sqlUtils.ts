@@ -1,9 +1,7 @@
-// filepath: src/lib/sqlUtils.ts
 import { NextRequest, NextResponse } from 'next/server';
 import pool from '@/lib/db';
 import { QueryResult } from '@/lib/types';
 
-// Common function to handle database errors
 export function handleDatabaseError(error: unknown): NextResponse<QueryResult<any>> {
   console.error('Database error:', error);
   return NextResponse.json<QueryResult<any>>({
@@ -12,7 +10,6 @@ export function handleDatabaseError(error: unknown): NextResponse<QueryResult<an
   }, { status: 500 });
 }
 
-// Validate table name to prevent SQL injection
 export function validateTableName(tableName: string): boolean {
   const validTables = [
     'User',
@@ -30,7 +27,6 @@ export function validateTableName(tableName: string): boolean {
   return validTables.includes(tableName.toLowerCase());
 }
 
-// Escape values for SQL injection protection
 export function escapeValue(value: any): string {
   if (value === null || value === undefined) {
     return 'NULL';
@@ -48,11 +44,9 @@ export function escapeValue(value: any): string {
     return `'${value.toISOString().slice(0, 19).replace('T', ' ')}'`;
   }
   
-  // Escape string values
   return `'${String(value).replace(/'/g, "''")}'`;
 }
 
-// Extract query parameters from NextRequest
 export function extractQueryParams(request: NextRequest): {
   fields: string[];
   where: Record<string, any>;
@@ -63,10 +57,8 @@ export function extractQueryParams(request: NextRequest): {
 } {
   const searchParams = request.nextUrl.searchParams;
   
-  // Extract and parse fields
   const fields = searchParams.get('fields')?.split(',') || ['*'];
   
-  // Extract and parse where clause
   let where = {};
   const whereJson = searchParams.get('where');
   if (whereJson) {
@@ -77,7 +69,6 @@ export function extractQueryParams(request: NextRequest): {
     }
   }
   
-  // Extract other params
   const orderBy = searchParams.get('orderBy') || '';
   const limit = parseInt(searchParams.get('limit') || '0');
   const offset = parseInt(searchParams.get('offset') || '0');
@@ -93,7 +84,6 @@ export function extractQueryParams(request: NextRequest): {
   };
 }
 
-// Build WHERE clause for SQL query
 export function buildWhereClause(whereObj: Record<string, any>): string {
   if (!whereObj || Object.keys(whereObj).length === 0) {
     return '';
@@ -105,7 +95,7 @@ export function buildWhereClause(whereObj: Record<string, any>): string {
     }
     
     if (Array.isArray(value)) {
-      if (value.length === 0) return '1=0'; // Empty array, no match
+      if (value.length === 0) return '1=0'; 
       const escapedValues = value.map(v => escapeValue(v)).join(',');
       return `${key} IN (${escapedValues})`;
     }
@@ -135,7 +125,6 @@ export function buildWhereClause(whereObj: Record<string, any>): string {
   return conditions ? `WHERE ${conditions}` : '';
 }
 
-// Build SET clause for UPDATE queries
 export function buildSetClause(setObj: Record<string, any>): string {
   if (!setObj || Object.keys(setObj).length === 0) {
     throw new Error('Update requires fields to set');
@@ -148,7 +137,6 @@ export function buildSetClause(setObj: Record<string, any>): string {
   return setters;
 }
 
-// Execute raw SQL query
 export async function executeRawQuery(sql: string, params?: any[]): Promise<any> {
   
   try {
@@ -156,7 +144,5 @@ export async function executeRawQuery(sql: string, params?: any[]): Promise<any>
       ? await pool.query(sql, params)
       : await pool.query(sql);
     return results;
-  } finally {
-    // connection.release();
-  }
+  } 
 }

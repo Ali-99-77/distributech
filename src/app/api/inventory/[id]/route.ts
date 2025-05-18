@@ -31,7 +31,7 @@ export async function GET(
         data: (data as any)[0],
       });
     } finally {
-      // connection.release();
+       
     }
   } catch (error) {
     return handleDatabaseError(error);
@@ -136,7 +136,7 @@ export async function DELETE(
         data: { deleted: true, id: inventoryId },
       });
     } finally {
-      // connection.release();
+       
     }
   } catch (error) {
     return handleDatabaseError(error);

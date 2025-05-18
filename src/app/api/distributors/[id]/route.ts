@@ -66,7 +66,7 @@ export async function GET(
         data: data[0],
       });
     } finally {
-      // connection.release();
+       
     }
   } catch (error) {
     return handleDatabaseError(error);
@@ -135,7 +135,7 @@ export async function PATCH(
         data: updatedData[0],
       });
     } finally {
-      // connection.release();
+       
     }
   } catch (error) {
     return handleDatabaseError(error);
@@ -196,7 +196,7 @@ export async function DELETE(
         data: { deleted: true, id: distributorId },
       });
     } finally {
-      // connection.release();
+       
     }
   } catch (error) {
     return handleDatabaseError(error);

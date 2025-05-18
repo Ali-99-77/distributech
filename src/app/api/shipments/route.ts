@@ -76,7 +76,7 @@ export async function GET(request: NextRequest) {
         count: shipmentsResult.rowCount,
       });
     } finally {
-      // connection.release();
+       
     }
   } catch (error) {
     return handleDatabaseError(error);

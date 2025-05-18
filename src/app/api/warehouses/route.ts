@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
       const data= await pool.query(sql);
       return NextResponse.json({ success: true, data: data.rows});
     } finally {
-      // connection.release();
+       
     }
   } catch (error) {
     return handleDatabaseError(error);
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
         { status: 201 }
       );
     } finally {
-      // connection.release();
+       
     }
   } catch (error) {
     return handleDatabaseError(error);

@@ -1,6 +1,5 @@
 import { TableName, WhereClause, SetClause } from './types';
 
-// Escape and sanitize input values to prevent SQL injection
 export function escapeValue(value: any): string {
   if (value === null || value === undefined) {
     return 'NULL';
@@ -18,11 +17,9 @@ export function escapeValue(value: any): string {
     return `'${value.toISOString().slice(0, 19).replace('T', ' ')}'`;
   }
   
-  // Escape string values
   return `'${String(value).replace(/'/g, "''")}'`;
 }
 
-// Build WHERE clause from an object
 export function buildWhereClause(whereObj: WhereClause): string {
   if (!whereObj || Object.keys(whereObj).length === 0) {
     return '';
@@ -34,7 +31,7 @@ export function buildWhereClause(whereObj: WhereClause): string {
     }
     
     if (Array.isArray(value)) {
-      if (value.length === 0) return '1=0'; // Empty array, no match
+      if (value.length === 0) return '1=0'; 
       const escapedValues = value.map(v => escapeValue(v)).join(',');
       return `${key} IN (${escapedValues})`;
     }
@@ -64,7 +61,6 @@ export function buildWhereClause(whereObj: WhereClause): string {
   return conditions ? `WHERE ${conditions}` : '';
 }
 
-// Build SET clause for UPDATE queries
 export function buildSetClause(setObj: SetClause): string {
   if (!setObj || Object.keys(setObj).length === 0) {
     throw new Error('Update requires fields to set');
@@ -77,7 +73,6 @@ export function buildSetClause(setObj: SetClause): string {
   return `SET ${setters}`;
 }
 
-// Generate SELECT query
 export function generateSelectQuery(
   table: TableName, 
   fields: string[] = ['*'], 
@@ -102,13 +97,11 @@ export function generateSelectQuery(
   `.trim().replace(/\s+/g, ' ');
 }
 
-// Generate INSERT query
 export function generateInsertQuery(table: TableName, data: Record<string, any> | Record<string, any>[]): string {
   if (!data || (Array.isArray(data) && data.length === 0) || Object.keys(data).length === 0) {
     throw new Error('Insert requires data');
   }
   
-  // Handle batch insert
   if (Array.isArray(data)) {
     const fields = Object.keys(data[0]);
     const values = data.map(item => {
@@ -119,14 +112,12 @@ export function generateInsertQuery(table: TableName, data: Record<string, any> 
     return `INSERT INTO ${table} (${fields.join(', ')}) VALUES ${values}`;
   }
   
-  // Handle single insert
   const fields = Object.keys(data);
   const values = fields.map(field => escapeValue(data[field])).join(', ');
   
   return `INSERT INTO ${table} (${fields.join(', ')}) VALUES (${values})`;
 }
 
-// Generate UPDATE query
 export function generateUpdateQuery(table: TableName, set: SetClause, where: WhereClause): string {
   if (Object.keys(where).length === 0) {
     throw new Error('Update requires WHERE clause for safety');
@@ -138,7 +129,6 @@ export function generateUpdateQuery(table: TableName, set: SetClause, where: Whe
   return `UPDATE ${table} ${setClause} ${whereClause}`;
 }
 
-// Generate DELETE query
 export function generateDeleteQuery(table: TableName, where: WhereClause): string {
   if (Object.keys(where).length === 0) {
     throw new Error('Delete requires WHERE clause for safety');
@@ -149,7 +139,6 @@ export function generateDeleteQuery(table: TableName, where: WhereClause): strin
   return `DELETE FROM ${table} ${whereClause}`;
 }
 
-// Validate table name against allowed tables
 export function validateTableName(tableName: string): boolean {
   const validTables = [
     'User',
@@ -168,13 +157,11 @@ export function validateTableName(tableName: string): boolean {
   return validTables.includes(tableName.toLowerCase());
 }
 
-// Generate COUNT query
 export function generateCountQuery(table: TableName, where: WhereClause = {}): string {
   const whereClause = buildWhereClause(where);
   return `SELECT COUNT(*) as count FROM ${table} ${whereClause}`;
 }
 
-// Generate JOIN query
 export function generateJoinQuery(
   mainTable: TableName,
   joins: Array<{

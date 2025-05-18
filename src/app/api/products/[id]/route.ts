@@ -45,7 +45,7 @@ export async function GET(
         data: data.rows[0],
       });
     } finally {
-      // connection.release();
+       
     }
   } catch (error) {
     return handleDatabaseError(error);
@@ -111,7 +111,7 @@ export async function PATCH(
         data: (data as any)[0],
       });
     } finally {
-      // connection.release();
+       
     }
   } catch (error) {
     return handleDatabaseError(error);
@@ -156,7 +156,7 @@ export async function DELETE(
         data: { deleted: true, id: productId },
       });
     } finally {
-      // connection.release();
+       
     }
   } catch (error) {
     return handleDatabaseError(error);

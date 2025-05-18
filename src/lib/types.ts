@@ -1,4 +1,3 @@
-// Database schema types based on ERD
 
 export interface User {
   usr_id: number;
@@ -85,7 +84,6 @@ export interface Notification {
   ntf_description: string;
 }
 
-// Query response type
 export interface QueryResult<T> {
   success: boolean;
   data?: T | T[];
@@ -93,11 +91,9 @@ export interface QueryResult<T> {
   count?: number;
 }
 
-// DML operation types
 export type WhereClause = Record<string, any>;
 export type SetClause = Record<string, any>;
 
-// Table names type
 export type TableName = 
   | 'User' 
   | 'distributor' 

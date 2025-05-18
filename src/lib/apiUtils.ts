@@ -1,4 +1,3 @@
-// src/lib/apiUtils.ts
 import { NextRequest, NextResponse } from 'next/server';
 import pool from '@/lib/db';
 import { 
@@ -12,7 +11,6 @@ import {
 } from '@/lib/queryBuilder';
 import { QueryResult, TableName, WhereClause, SetClause } from '@/lib/types';
 
-// Common function to handle database errors
 export function handleDatabaseError(error: unknown): NextResponse<QueryResult<any>> {
   console.error('Database error:', error);
   return NextResponse.json<QueryResult<any>>({
@@ -21,7 +19,6 @@ export function handleDatabaseError(error: unknown): NextResponse<QueryResult<an
   }, { status: 500 });
 }
 
-// Execute a SELECT query with pagination and filtering
 export async function executeSelectQuery(
   table: TableName,
   fields: string[] = ['*'],
@@ -36,7 +33,6 @@ export async function executeSelectQuery(
 }> {
   
   try {
-    // Generate and execute query
     const query = generateSelectQuery(
       table,
       fields,
@@ -48,7 +44,6 @@ export async function executeSelectQuery(
     
     const [results] = await pool.query(query);
     
-    // If count is requested, get total count
     let count;
     if (includeCount) {
       const countQuery = generateCountQuery(table, where);
@@ -61,11 +56,9 @@ export async function executeSelectQuery(
       count
     };
   } finally {
-    // connection.release();
   }
 }
 
-// Execute a JOIN query with pagination and filtering
 export async function executeJoinQuery(
   mainTable: TableName,
   joins: Array<{
@@ -93,12 +86,9 @@ export async function executeJoinQuery(
     
     const [results] = await pool.query(query);
     return results as any[];
-  } finally {
-    // connection.release();
-  }
+  } 
 }
 
-// Execute an INSERT query
 export async function executeInsertQuery(
   table: TableName,
   data: Record<string, any> | Record<string, any>[]
@@ -115,12 +105,9 @@ export async function executeInsertQuery(
       insertId: (result as any).insertId,
       affectedRows: (result as any).affectedRows
     };
-  } finally {
-    // connection.release();
-  }
+  } 
 }
 
-// Execute an UPDATE query
 export async function executeUpdateQuery(
   table: TableName,
   set: SetClause,
@@ -138,12 +125,9 @@ export async function executeUpdateQuery(
       affectedRows: (result as any).affectedRows,
       changedRows: (result as any).changedRows
     };
-  } finally {
-    // connection.release();
-  }
+  } 
 }
 
-// Execute a DELETE query
 export async function executeDeleteQuery(
   table: TableName,
   where: WhereClause
@@ -158,12 +142,10 @@ export async function executeDeleteQuery(
     return {
       affectedRows: (result as any).affectedRows
     };
-  } finally {
-    // connection.release();
   }
+  
 }
 
-// Extract query parameters from NextRequest
 export function extractQueryParams(request: NextRequest): {
   fields: string[];
   where: WhereClause;
@@ -186,7 +168,6 @@ export function extractQueryParams(request: NextRequest): {
     }
   }
   
-  // Extract other params
   const orderBy = searchParams.get('orderBy') || '';
   const limit = parseInt(searchParams.get('limit') || '0');
   const offset = parseInt(searchParams.get('offset') || '0');

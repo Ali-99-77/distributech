@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
         count: includeCount ? count : (data as any).length,
       });
     } finally {
-      // connection.release();
+       
     }
   } catch (error) {
     return handleDatabaseError(error);
@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
         { status: 201 }
       );
     } finally {
-      // connection.release();
+       
     }
   } catch (error) {
     return handleDatabaseError(error);

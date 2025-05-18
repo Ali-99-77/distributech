@@ -28,7 +28,7 @@ export async function GET(
       }
       return NextResponse.json({ success: true, data: data[0] });
     } finally {
-      // connection.release();
+       
     }
   } catch (error) {
     return handleDatabaseError(error);
@@ -75,7 +75,7 @@ export async function PATCH(
       const data= await pool.query(selectSql, [warehouseId]);
       return NextResponse.json({ success: true, data: (data as any)[0] });
     } finally {
-      // connection.release();
+       
     }
   } catch (error) {
     return handleDatabaseError(error);
@@ -111,7 +111,7 @@ export async function DELETE(
         data: { deleted: true, id: warehouseId },
       });
     } finally {
-      // connection.release();
+       
     }
   } catch (error) {
     return handleDatabaseError(error);

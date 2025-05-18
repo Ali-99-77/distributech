@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
         count: (data as any).length,
       });
     } finally {
-      // connection.release();
+       
     }
   } catch (error) {
     return handleDatabaseError(error);
